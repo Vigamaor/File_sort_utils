@@ -35,6 +35,19 @@ def sort_files(path, filetype):
 
 
 def sort_by_age_photo(path):
+    month_names = {
+        "1": "January", "01": "January",
+        "2": "February", "02": "February",
+        "3": "March", "03": "March",
+        "4": "April", "04": "April",
+        "5": "May", "05": "May",
+        "6": "June", "06": "June",
+        "7": "July", "07": "July",
+        "8": "August", "08": "August",
+        "9": "September", "09": "September",
+        "10": "October",
+        "11": "November",
+        "12": "December"}
     files_to_be_moved = []
     os.chdir(path)
     with os.scandir() as files:
@@ -61,42 +74,18 @@ def sort_by_age_photo(path):
                     year = time.year
                     month = time.month
                 try:
-                    new_path = str(year) + "/" + month_number_to_month_string(str(month))
+                    new_path = str(year) + "/" + month_names[str(month)]
                     os.makedirs(new_path)
                 except FileExistsError:
                     pass
+                except KeyError:
+                    try:
+                        print("Could not find the correct month")
+                        new_path = str(year) + "/" + str(month)
+                        os.makedirs(new_path)
+                    except FileExistsError:
+                        pass
                 os.rename(file.name, new_path + "/" + file.name)
-
-
-def month_number_to_month_string(month_number):
-    if month_number == "01" or month_number == "1":
-        month = "January"
-    elif month_number == "02" or month_number == "2":
-        month = "February"
-    elif month_number == "03" or month_number == "3":
-        month = "March"
-    elif month_number == "04" or month_number == "4":
-        month = "April"
-    elif month_number == "05" or month_number == "5":
-        month = "May"
-    elif month_number == "06" or month_number == "6":
-        month = "June"
-    elif month_number == "07" or month_number == "7":
-        month = "July"
-    elif month_number == "08" or month_number == "8":
-        month = "August"
-    elif month_number == "09" or month_number == "9":
-        month = "September"
-    elif month_number == "10" or month_number == "10":
-        month = "October"
-    elif month_number == "11" or month_number == "11":
-        month = "November"
-    elif month_number == "12" or month_number == "12":
-        month = "December"
-    else:
-        print("Could not find correct month")
-        return None
-    return month
 
 
 def flatten_file_structure(path):
